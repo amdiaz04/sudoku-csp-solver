@@ -108,7 +108,7 @@ Requires Docker Desktop. From the `product/` directory:
 docker compose up --build
 ```
 
-This starts the API, the frontend (nginx), and a Postgres container. Frontend at http://localhost:5173, API at http://localhost:8080. Postgres is provisioned for the planned benchmark persistence (see below) but the API does not use it yet.
+This starts the API and the frontend (nginx). Frontend at http://localhost:5173, API at http://localhost:8080.
 
 ## Command-line runner
 
@@ -128,7 +128,6 @@ mvn verify
 
 - Add a GitHub Actions CI/CD pipeline (build, test, deploy)
 - Add SAT-solver comparison as a baseline for the hardest known puzzles
-- Persist benchmark runs in Postgres so results are queryable over time
 
 ---
 
