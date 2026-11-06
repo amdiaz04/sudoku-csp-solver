@@ -100,6 +100,16 @@ Frontend runs on `http://localhost:5173` and proxies `/api` requests to the back
 | `product/sudoku-frontend` | React + TypeScript UI with solver and comparison views. |
 | `product/eight-queens` | Proof-of-concept: eight queens solved via backtracking. |
 
+## Running with Docker
+
+Requires Docker Desktop. From the `product/` directory:
+
+```bash
+docker compose up --build
+```
+
+This starts the API, the frontend (nginx), and a Postgres container. Frontend at http://localhost:5173, API at http://localhost:8080. Postgres is provisioned for the planned benchmark persistence (see below) but the API does not use it yet.
+
 ## Command-line runner
 
 For quick performance checks without the API/frontend:
@@ -114,20 +124,9 @@ Run tests and coverage:
 mvn verify
 ```
 
-### Or with Docker (recommended)
-
-Requires Docker Desktop. From the `product/` directory:
-
-​```bash
-docker compose up --build
-​```
-
-Brings up the API, frontend, and Postgres together. Frontend at http://localhost:5173, API at http://localhost:8080.
-
 ## What's next
 
-- Containerise the API and frontend with Docker (multi-stage builds, non-root user)
-- Deploy to AWS (ECS Fargate + RDS) with a GitHub Actions CI/CD pipeline
+- Add a GitHub Actions CI/CD pipeline (build, test, deploy)
 - Add SAT-solver comparison as a baseline for the hardest known puzzles
 - Persist benchmark runs in Postgres so results are queryable over time
 
