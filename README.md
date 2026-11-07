@@ -34,10 +34,7 @@ Averaged over 50 generated puzzles per difficulty, plus 43 externally sourced ha
 
 ## Tech stack
 
-- **Core solver library** — Java 21, JUnit 5, JaCoCo (coverage), Checkstyle, SpotBugs
-- **API** — Spring Boot 3, REST, OpenAPI/Swagger, multipart file upload
-- **Frontend** — React 18, TypeScript, Vite, Recharts
-- **CI** — build, test, coverage, and static analysis pipeline
+Java 21 (solvers, JUnit, JaCoCo, Checkstyle, SpotBugs) · Spring Boot 3 REST API with Swagger · React 19 + TypeScript + Vite · GitHub Actions CI · Docker, deployed on Google Cloud Run.
 
 ## Architecture
 
@@ -57,92 +54,24 @@ Averaged over 50 generated puzzles per difficulty, plus 43 externally sourced ha
                                                               └─ MAC + MRV
 ```
 
-## Running locally
+## Running it
 
-**Prerequisites:** Java 21, Maven 3.9+, Node.js 20+.
-
-**1. Install the core library into your local Maven repo:**
-```bash
-cd product/sudokuproject
-mvn clean install
-```
-
-**2. Start the API:**
-```bash
-cd ../sudoku-api
-mvn spring-boot:run
-```
-API runs on `http://localhost:8080`. Swagger UI at `http://localhost:8080/swagger-ui/index.html`.
-
-**3. Start the frontend (in a second terminal):**
-```bash
-cd product/sudoku-frontend
-npm install
-npm run dev
-```
-Frontend runs on `http://localhost:5173` and proxies `/api` requests to the backend.
-
-## Using the app
-
-- **Solver tab** — generate a puzzle at a chosen difficulty, pick an algorithm, and solve. Or upload your own puzzle as an 81-character `.txt` file (digits `1-9`, `0` or `.` for empty).
-- **Statistics tab** — benchmark multiple algorithms against generated or uploaded puzzles, view side-by-side charts of backtracks, nodes visited, and runtime.
-
-**Bulk upload format:** one 81-character puzzle per line.
-
-## Repository structure
-
-| Path | Description |
-|------|------|
-| `product/sudokuproject` | Core Java library: `SudokuBoard`, `SudokuPuzzle`, generators, and all solver implementations. Full unit test suite with JaCoCo, Checkstyle, SpotBugs. |
-| `product/sudoku-api` | Spring Boot REST API: generate, solve, benchmark, file upload endpoints. |
-| `product/sudoku-frontend` | React + TypeScript UI with solver and comparison views. |
-
-## Running with Docker
-
-Requires Docker Desktop. From the `product/` directory:
-
+**With Docker** (from `product/`):
 ```bash
 docker compose up --build
 ```
+Frontend at http://localhost:5173, API at http://localhost:8080 (Swagger at `/swagger-ui/index.html`).
 
-This starts the API and the frontend (nginx). Frontend at http://localhost:5173, API at http://localhost:8080.
-
-## Deploying to Google Cloud Run
-
-The API and frontend are deployed as two separate Cloud Run services, each built from its own `Dockerfile`. Requires the [gcloud CLI](https://cloud.google.com/sdk/docs/install) and a Google Cloud project with billing enabled.
-
-**One-time setup:**
+**Without Docker** (Java 21, Maven, Node 20+):
 ```bash
-gcloud auth login
-gcloud config set project YOUR_PROJECT_ID
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
+cd product/sudokuproject && mvn clean install
+cd ../sudoku-api && mvn spring-boot:run          # API on :8080
+cd ../sudoku-frontend && npm install && npm run dev   # UI on :5173
 ```
 
-**1. Deploy the API** (from the repo root). Note the service URL it prints:
-```bash
-gcloud run deploy sudoku-api --source product --region europe-west2 --allow-unauthenticated --max-instances 1
-```
+**Using the app:** the Solver tab generates or uploads a puzzle (81 characters, digits `1-9`, `0` or `.` for empty) and solves it with a chosen algorithm. The Statistics tab benchmarks algorithms on generated puzzles or an uploaded file (one puzzle per line) and charts backtracks, nodes visited and runtime.
 
-**2. Deploy the frontend**, pointing it at the API URL from step 1:
-```bash
-gcloud run deploy sudoku-frontend --source product/sudoku-frontend --region europe-west2 --allow-unauthenticated --set-env-vars API_URL=https://YOUR-API-URL
-```
-
-The frontend's nginx serves the React app and forwards `/api/` requests to `API_URL`, so the browser only talks to the frontend. `--max-instances 1` is used because the API keeps the current puzzle in memory, so a single instance keeps requests consistent.
-
-## Command-line runner
-
-For quick performance checks without the API/frontend:
-```bash
-cd product/sudokuproject
-mvn compile
-java -cp target/classes fyp.sudoku.SudokuMain
-```
-
-Run tests and coverage:
-```bash
-mvn verify
-```
+Deployment steps for Cloud Run are in [docs/deploy.md](docs/deploy.md).
 
 ## What's next
 
