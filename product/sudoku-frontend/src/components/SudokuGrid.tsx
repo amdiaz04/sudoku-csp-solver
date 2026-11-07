@@ -6,7 +6,7 @@ export function SudokuGrid({ grid }: { grid: Grid }) {
   const cells = Array(81).fill(0);
 
   return (
-    <div className="w-full max-w-[540px] rounded-lg bg-white p-2">
+    <div className="w-full max-w-full rounded-lg bg-white p-2 md:w-[540px]">
       <div className="w-full border-1 border-gray-400">
         <div className="grid aspect-square w-full grid-cols-9 gap-0">
           {cells.map((_, index) => {
