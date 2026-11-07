@@ -5,6 +5,8 @@
 [![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 
+**Live app:** https://sudoku-frontend-1079750265164.europe-west2.run.app
+
 A full-stack application for solving and benchmarking Sudoku puzzles using different constraint satisfaction and search techniques — plain backtracking, AC-3, MRV, MAC, and hybrids. The frontend lets you solve individual puzzles or run bulk benchmarks to compare algorithm performance visually.
 
 ![Algorithm comparison view](docs/screenshot.png)
@@ -104,6 +106,29 @@ docker compose up --build
 ```
 
 This starts the API and the frontend (nginx). Frontend at http://localhost:5173, API at http://localhost:8080.
+
+## Deploying to Google Cloud Run
+
+The API and frontend are deployed as two separate Cloud Run services, each built from its own `Dockerfile`. Requires the [gcloud CLI](https://cloud.google.com/sdk/docs/install) and a Google Cloud project with billing enabled.
+
+**One-time setup:**
+```bash
+gcloud auth login
+gcloud config set project YOUR_PROJECT_ID
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
+```
+
+**1. Deploy the API** (from the repo root). Note the service URL it prints:
+```bash
+gcloud run deploy sudoku-api --source product --region europe-west2 --allow-unauthenticated --max-instances 1
+```
+
+**2. Deploy the frontend**, pointing it at the API URL from step 1:
+```bash
+gcloud run deploy sudoku-frontend --source product/sudoku-frontend --region europe-west2 --allow-unauthenticated --set-env-vars API_URL=https://YOUR-API-URL
+```
+
+The frontend's nginx serves the React app and forwards `/api/` requests to `API_URL`, so the browser only talks to the frontend. `--max-instances 1` is used because the API keeps the current puzzle in memory (see the notes on state below).
 
 ## Command-line runner
 
