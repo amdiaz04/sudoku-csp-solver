@@ -2,7 +2,7 @@
 
 [![Java](https://img.shields.io/badge/Java-21-orange)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3-green)](https://spring.io/projects/spring-boot)
-[![React](https://img.shields.io/badge/React-18-blue)](https://react.dev/)
+[![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 
 **Live app:** https://sudoku-frontend-1079750265164.europe-west2.run.app
