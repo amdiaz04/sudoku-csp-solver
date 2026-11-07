@@ -122,8 +122,17 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Keep content clear of the iPhone notch / home indicator */
+    padding-top: env(safe-area-inset-top);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    overscroll-behavior-y: none;
   }
   html {
     @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    /* Disable double-tap zoom and the tap delay */
+    touch-action: manipulation;
   }
 }
