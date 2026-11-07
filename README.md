@@ -5,10 +5,6 @@
 [![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 
-**Live app:** https://sudoku-frontend-1079750265164.europe-west2.run.app
-
-**API docs (Swagger):** https://sudoku-api-1079750265164.europe-west2.run.app/swagger-ui/index.html
-
 A full-stack application for solving and benchmarking Sudoku puzzles using different constraint satisfaction and search techniques — plain backtracking, AC-3, MRV, MAC, and hybrids. The frontend lets you solve individual puzzles or run bulk benchmarks to compare algorithm performance visually.
 
 ![Algorithm comparison view](docs/screenshot.png)
@@ -125,7 +121,7 @@ mvn verify
 
 ## What's next
 
-- Add a GitHub Actions CI/CD pipeline (build, test, deploy)
+- Deploy the app to the cloud with a CD pipeline
 - Add SAT-solver comparison as a baseline for the hardest known puzzles
 
 ---
