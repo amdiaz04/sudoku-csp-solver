@@ -6,14 +6,14 @@ import java.util.Arrays;
 /**
  * Representation of a 9×9 Sudoku grid.
  */
-public class SudokuBoard {
+public final class SudokuBoard {
 
   private static final int SUDOKU_SIZE = 9;
   private final int[][] grid;
 
 
   /**
-   * Creates a Sudoku board from a pre-populated 9x9 matrix.
+   * Creates a Sudoku board from a pre-populated 9x9 matrix. The matrix is copied.
    *
    * @param grid a 2D array representing the Sudoku grid.
    * @throws InvalidSudokuBoardException if the grid is null or not the correct size.
@@ -34,7 +34,11 @@ public class SudokuBoard {
         throw new InvalidSudokuBoardException("Each row must have 9 columns");
       }
     }
-    this.grid = grid;
+    // Defensive deep copy so later changes to the caller's array cannot alter the board.
+    this.grid = new int[SUDOKU_SIZE][SUDOKU_SIZE];
+    for (int i = 0; i < SUDOKU_SIZE; i++) {
+      System.arraycopy(grid[i], 0, this.grid[i], 0, SUDOKU_SIZE);
+    }
   }
 
   /**

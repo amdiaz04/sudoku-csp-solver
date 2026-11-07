@@ -15,8 +15,10 @@ import fyp.sudoku.solver.SudokuAlgorithm;
 import fyp.sudoku.util.SudokuGenerator;
 import fyp.sudoku.util.SudokuReader;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +75,8 @@ public class SudokuMain {
       }
     }
 
-    try (BufferedReader reader = new BufferedReader(new FileReader("puzzles/puzzle.txt"))) {
+    try (BufferedReader reader =
+        Files.newBufferedReader(Path.of("puzzles/puzzle.txt"), StandardCharsets.UTF_8)) {
       List<SudokuBoard> boards = SudokuReader.readMultiplePuzzles(reader);
 
       for (int i = 0; i < boards.size(); i++) {
