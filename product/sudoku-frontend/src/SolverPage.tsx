@@ -150,10 +150,10 @@ function App() {
   return (
     <>
       {/* Whole screen */}
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-6">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-6">
         {/* Title and headings */}
         <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight">
+          <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
             Sudoku Solver
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -165,14 +165,14 @@ function App() {
         {/* Puzzle controls */}
         <div className="flex flex-col gap-4">
           {/* Row 1: Generate or upload a puzzle */}
-          <div className="flex flex-row items-center gap-4">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
             <Select
               value={difficulty}
               onValueChange={(val) =>
                 setDifficulty(val as Difficulty | "RANDOM")
               }
             >
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="h-11 w-full md:h-8 md:w-48">
                 <SelectValue placeholder="Select difficulty" />
               </SelectTrigger>
               <SelectContent side="bottom">
@@ -186,27 +186,32 @@ function App() {
             </Select>
 
             <Button
+              className="h-11 w-full md:h-8 md:w-auto"
               onClick={getGeneratePuzzle}
               disabled={!difficulty || loadingGenerator}
             >
               {loadingGenerator ? "Generating..." : "Generate Puzzle"}
             </Button>
 
-            <div className="mx-2 h-6 w-px bg-border" />
+            <div className="mx-2 hidden h-6 w-px bg-border md:block" />
             <input
               key={fileInputKey}
               type="file"
               accept=".txt"
               onChange={handleFile}
-              className="text-sm"
+              className="w-full text-sm md:w-auto"
             />
-            <Button onClick={solveFilePuzzle} disabled={!file || loadingUpload}>
+            <Button
+              className="h-11 w-full md:h-8 md:w-auto"
+              onClick={solveFilePuzzle}
+              disabled={!file || loadingUpload}
+            >
               {loadingUpload ? "Uploading..." : "Upload Puzzle"}
             </Button>
           </div>
 
           {/* Row 2: Select algorithm and solve */}
-          <div className="flex flex-row items-center gap-4">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
             <Select
               value={algorithm}
               onValueChange={(val) => {
@@ -217,7 +222,7 @@ function App() {
                 setNodesVisited(null);
               }}
             >
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="h-11 w-full md:h-8 md:w-48">
                 <SelectValue placeholder="Select algorithm" />
               </SelectTrigger>
               <SelectContent side="bottom">
@@ -230,6 +235,7 @@ function App() {
             </Select>
 
             <Button
+              className="h-11 w-full md:h-8 md:w-auto"
               onClick={getSolver}
               disabled={!hasGrid || !algorithm || solved || loadingSolver}
             >
@@ -239,9 +245,9 @@ function App() {
         </div>
 
         {/* Grids */}
-        <div className="flex flex-row items-start gap-10">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-10">
           {/* Unsolved grid */}
-          <div className="flex flex-col gap-2">
+          <div className="flex w-full flex-col gap-2 md:w-auto">
             <SudokuGrid grid={grid} />
 
             {/* Difficulty text */}
@@ -251,7 +257,7 @@ function App() {
           </div>
 
           {/* Solved grid */}
-          <div className="flex flex-col gap-4">
+          <div className="flex w-full flex-col gap-4 md:w-auto">
             <SudokuGrid grid={solvedGrid} />
 
             {/* Statistics text */}

@@ -117,10 +117,10 @@ function PerformancePage() {
   return (
     <>
       {/* Whole screen */}
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-6">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-6">
         {/* Title and headings */}
         <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight">
+          <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
             Comparison of Algorithms
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -130,13 +130,13 @@ function PerformancePage() {
         </header>
 
         {/* Drop downs and buttons */}
-        <div className="flex flex-row gap-6">
+        <div className="flex flex-col gap-3 md:flex-row md:gap-6">
           {/* Difficulty drop down */}
           <Select
             value={difficulty}
             onValueChange={(val) => setDifficulty(val as Difficulty | "RANDOM")}
           >
-            <SelectTrigger className="w-60">
+            <SelectTrigger className="h-11 w-full md:h-8 md:w-60">
               <SelectValue placeholder="Select difficulty" />
             </SelectTrigger>
             <SelectContent side="bottom">
@@ -150,6 +150,7 @@ function PerformancePage() {
           </Select>
           <input
             type="number"
+            inputMode="numeric"
             min={1}
             max={100}
             value={puzzleCount}
@@ -157,13 +158,14 @@ function PerformancePage() {
             onBlur={() =>
               setPuzzleCount(Math.min(100, Math.max(1, puzzleCount)))
             }
-            className="w-20 rounded-md border px-3 py-2 text-sm"
+            className="h-11 w-full rounded-md border px-3 py-2 text-base md:h-auto md:w-20 md:text-sm"
             placeholder="Count"
           />
 
           {/* Calculate averages button.
           It is disabled if a difficulty isn't selected */}
           <Button
+            className="h-11 w-full md:h-8 md:w-auto"
             onClick={runCalculation}
             disabled={(!difficulty && !file) || loading}
           >
@@ -174,7 +176,7 @@ function PerformancePage() {
             type="file"
             accept=".txt"
             onChange={handleFile}
-            className="text-sm"
+            className="w-full text-sm md:w-auto"
           />
         </div>
 
@@ -228,7 +230,7 @@ function PerformancePage() {
               The three algorithms with the fewest average backtracks.
             </p>
 
-            <div className="flex flex-row gap-6 mt-10">
+            <div className="mt-10 flex flex-col gap-10 md:flex-row md:gap-6">
               {/* Top 3 algorithms */}
               <div className="w-full">
                 <p className="text-sm font-medium text-center mb-2">
@@ -246,16 +248,20 @@ function PerformancePage() {
                     margin={{
                       left: 20,
                       right: 12,
-                      bottom: 30,
+                      bottom: 10,
                     }}
                   >
                     <CartesianGrid vertical={false} />
                     <XAxis
                       dataKey="name"
+                      interval={0}
+                      angle={-35}
+                      textAnchor="end"
+                      height={80}
                       label={{
                         value: "Algorithm",
                         position: "insideBottom",
-                        offset: -5,
+                        offset: 0,
                       }}
                     />
                     <YAxis
@@ -265,8 +271,6 @@ function PerformancePage() {
                         position: "insideLeft",
                       }}
                     />
-                    <XAxis dataKey="name" />
-                    <YAxis />
                     <Bar dataKey="backtracks" fill="#ff964b" />
                   </BarChart>
                 </ChartContainer>
@@ -287,16 +291,20 @@ function PerformancePage() {
                     margin={{
                       left: 20,
                       right: 12,
-                      bottom: 30,
+                      bottom: 10,
                     }}
                   >
                     <CartesianGrid vertical={false} />
                     <XAxis
                       dataKey="name"
+                      interval={0}
+                      angle={-35}
+                      textAnchor="end"
+                      height={80}
                       label={{
                         value: "Algorithm",
                         position: "insideBottom",
-                        offset: -5,
+                        offset: 0,
                       }}
                     />
                     <YAxis
@@ -306,8 +314,6 @@ function PerformancePage() {
                         position: "insideLeft",
                       }}
                     />
-                    <XAxis dataKey="name" />
-                    <YAxis />
                     <Bar dataKey="nodesVisited" fill="#8bc9ff" />
                   </BarChart>
                 </ChartContainer>
@@ -317,7 +323,7 @@ function PerformancePage() {
             <p className="text-sm text-muted-foreground">
               Comparison across all six algorithms.
             </p>
-            <div className="flex flex-row gap-6 mt-10">
+            <div className="mt-10 flex flex-col gap-10 md:flex-row md:gap-6">
               <div className="w-full">
                 <p className="text-sm font-medium text-center mb-2">
                   Average Backtracks
@@ -334,16 +340,20 @@ function PerformancePage() {
                     margin={{
                       left: 20,
                       right: 12,
-                      bottom: 30,
+                      bottom: 10,
                     }}
                   >
                     <CartesianGrid vertical={false} />
                     <XAxis
                       dataKey="name"
+                      interval={0}
+                      angle={-35}
+                      textAnchor="end"
+                      height={80}
                       label={{
                         value: "Algorithm",
                         position: "insideBottom",
-                        offset: -5,
+                        offset: 0,
                       }}
                     />
                     <YAxis
@@ -353,8 +363,6 @@ function PerformancePage() {
                         position: "insideLeft",
                       }}
                     />
-                    <XAxis dataKey="name" />
-                    <YAxis />ß
                     <Bar dataKey="backtracks" fill="#ffaacd" />
                   </BarChart>
                 </ChartContainer>
@@ -375,16 +383,20 @@ function PerformancePage() {
                     margin={{
                       left: 20,
                       right: 12,
-                      bottom: 30,
+                      bottom: 10,
                     }}
                   >
                     <CartesianGrid vertical={false} />
                     <XAxis
                       dataKey="name"
+                      interval={0}
+                      angle={-35}
+                      textAnchor="end"
+                      height={80}
                       label={{
                         value: "Algorithm",
                         position: "insideBottom",
-                        offset: -5,
+                        offset: 0,
                       }}
                     />
                     <YAxis
@@ -394,8 +406,6 @@ function PerformancePage() {
                         position: "insideLeft",
                       }}
                     />
-                    <XAxis dataKey="name" />
-                    <YAxis />
                     <Bar dataKey="nodesVisited" fill="#ffd3f5" />
                   </BarChart>
                 </ChartContainer>
