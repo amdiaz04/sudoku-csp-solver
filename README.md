@@ -74,7 +74,7 @@ mvn clean install
 cd ../sudoku-api
 mvn spring-boot:run
 ```
-API runs on `http://localhost:8080`. Swagger UI at `http://localhost:8080/swagger-ui.html`.
+API runs on `http://localhost:8080`. Swagger UI at `http://localhost:8080/swagger-ui/index.html`.
 
 **3. Start the frontend (in a second terminal):**
 ```bash
