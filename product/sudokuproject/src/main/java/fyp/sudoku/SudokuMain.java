@@ -73,7 +73,7 @@ public class SudokuMain {
       }
     }
 
-    try (BufferedReader reader = new BufferedReader(new FileReader("puzzle.txt"))) {
+    try (BufferedReader reader = new BufferedReader(new FileReader("puzzles/puzzle.txt"))) {
       List<SudokuBoard> boards = SudokuReader.readMultiplePuzzles(reader);
 
       for (int i = 0; i < boards.size(); i++) {
