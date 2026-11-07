@@ -128,7 +128,7 @@ gcloud run deploy sudoku-api --source product --region europe-west2 --allow-unau
 gcloud run deploy sudoku-frontend --source product/sudoku-frontend --region europe-west2 --allow-unauthenticated --set-env-vars API_URL=https://YOUR-API-URL
 ```
 
-The frontend's nginx serves the React app and forwards `/api/` requests to `API_URL`, so the browser only talks to the frontend. `--max-instances 1` is used because the API keeps the current puzzle in memory (see the notes on state below).
+The frontend's nginx serves the React app and forwards `/api/` requests to `API_URL`, so the browser only talks to the frontend. `--max-instances 1` is used because the API keeps the current puzzle in memory, so a single instance keeps requests consistent.
 
 ## Command-line runner
 
