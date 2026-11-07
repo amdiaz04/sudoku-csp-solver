@@ -98,7 +98,6 @@ Frontend runs on `http://localhost:5173` and proxies `/api` requests to the back
 | `product/sudokuproject` | Core Java library: `SudokuBoard`, `SudokuPuzzle`, generators, and all solver implementations. Full unit test suite with JaCoCo, Checkstyle, SpotBugs. |
 | `product/sudoku-api` | Spring Boot REST API: generate, solve, benchmark, file upload endpoints. |
 | `product/sudoku-frontend` | React + TypeScript UI with solver and comparison views. |
-| `product/eight-queens` | Proof-of-concept: eight queens solved via backtracking. |
 
 ## Running with Docker
 
