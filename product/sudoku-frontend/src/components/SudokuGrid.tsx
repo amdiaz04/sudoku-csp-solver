@@ -6,9 +6,9 @@ export function SudokuGrid({ grid }: { grid: Grid }) {
   const cells = Array(81).fill(0);
 
   return (
-    <div className="inline-block rounded-lg bg-border bg-white p-2">
-      <div className="inline-block border-1 border-gray-400 ">
-        <div className="grid grid-cols-9 gap-0">
+    <div className="w-full max-w-full rounded-lg bg-white p-2 md:w-[540px]">
+      <div className="w-full border-1 border-gray-400">
+        <div className="grid aspect-square w-full grid-cols-9 gap-0">
           {cells.map((_, index) => {
             // Convert flat index to row and column
             const row = Math.floor(index / 9);
@@ -22,7 +22,7 @@ export function SudokuGrid({ grid }: { grid: Grid }) {
             const thickRight = col === 8;
 
             const borderClasses = [
-              "w-15 h-15 flex items-center justify-center",
+              "aspect-square flex items-center justify-center text-lg sm:text-2xl",
               thickTop ? "border-t-2" : "border-t",
               thickLeft ? "border-l-2" : "border-l",
               thickBottom ? "border-b-2" : "border-b",
