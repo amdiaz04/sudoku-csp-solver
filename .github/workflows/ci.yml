@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  core-library:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: product/sudokuproject
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+          cache-dependency-path: product/sudokuproject/pom.xml
+
+      - name: Build
+        run: mvn --batch-mode compile
+
+      - name: Test
+        run: mvn --batch-mode test
+
+      - name: Coverage (JaCoCo)
+        run: mvn --batch-mode verify
+
+      - name: Checkstyle
+        run: mvn --batch-mode checkstyle:check
+
+      - name: SpotBugs
+        run: mvn --batch-mode spotbugs:check

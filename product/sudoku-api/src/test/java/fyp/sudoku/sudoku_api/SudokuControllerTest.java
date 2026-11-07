@@ -1,5 +1,6 @@
 package fyp.sudoku.sudoku_api;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -7,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import fyp.sudoku.exception.SudokuReadingException;
 import fyp.sudoku.exception.UnsolvableSudokuException;
 import fyp.sudoku.model.Difficulty;
 import fyp.sudoku.model.SudokuBoard;
@@ -105,5 +107,45 @@ public class SudokuControllerTest {
         .andExpect(status().isBadRequest());
   }
 
+  @Test
+  public void testSolveWithNoPuzzleLoaded() throws Exception {
+    doThrow(new IllegalStateException("No puzzle loaded"))
+        .when(sudokuManager).solvePuzzle();
+
+    mockMvc.perform(post("/api/sudoku/solve"))
+        .andExpect(status().isConflict());
+  }
+
+  @Test
+  public void testSetUnknownAlgorithm() throws Exception {
+    when(sudokuManager.getAlgorithms()).thenReturn(java.util.Map.of());
+
+    mockMvc.perform(post("/api/sudoku/algorithm").param("name", "Nope"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void testUploadMalformedPuzzle() throws Exception {
+    when(sudokuManager.loadFromUser(any()))
+        .thenThrow(new SudokuReadingException("bad puzzle"));
+
+    mockMvc.perform(post("/api/sudoku/upload-puzzle").content("123"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void testUploadMalformedPuzzles() throws Exception {
+    when(sudokuManager.calcAvgFromFile(any()))
+        .thenThrow(new SudokuReadingException("bad puzzles"));
+
+    mockMvc.perform(post("/api/sudoku/upload-puzzles").content("123"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void testCalculateAverageRejectsZeroCount() throws Exception {
+    mockMvc.perform(get("/api/sudoku/calculate-average").param("puzzleCount", "0"))
+        .andExpect(status().isBadRequest());
+  }
 
 }

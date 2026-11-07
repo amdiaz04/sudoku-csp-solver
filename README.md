@@ -2,7 +2,7 @@
 
 [![Java](https://img.shields.io/badge/Java-21-orange)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3-green)](https://spring.io/projects/spring-boot)
-[![React](https://img.shields.io/badge/React-18-blue)](https://react.dev/)
+[![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 
 **Live app:** https://sudoku-frontend-1079750265164.europe-west2.run.app
@@ -74,7 +74,7 @@ mvn clean install
 cd ../sudoku-api
 mvn spring-boot:run
 ```
-API runs on `http://localhost:8080`. Swagger UI at `http://localhost:8080/swagger-ui.html`.
+API runs on `http://localhost:8080`. Swagger UI at `http://localhost:8080/swagger-ui/index.html`.
 
 **3. Start the frontend (in a second terminal):**
 ```bash
@@ -98,7 +98,16 @@ Frontend runs on `http://localhost:5173` and proxies `/api` requests to the back
 | `product/sudokuproject` | Core Java library: `SudokuBoard`, `SudokuPuzzle`, generators, and all solver implementations. Full unit test suite with JaCoCo, Checkstyle, SpotBugs. |
 | `product/sudoku-api` | Spring Boot REST API: generate, solve, benchmark, file upload endpoints. |
 | `product/sudoku-frontend` | React + TypeScript UI with solver and comparison views. |
-| `product/eight-queens` | Proof-of-concept: eight queens solved via backtracking. |
+
+## Running with Docker
+
+Requires Docker Desktop. From the `product/` directory:
+
+```bash
+docker compose up --build
+```
+
+This starts the API and the frontend (nginx). Frontend at http://localhost:5173, API at http://localhost:8080.
 
 ## Command-line runner
 
@@ -114,22 +123,10 @@ Run tests and coverage:
 mvn verify
 ```
 
-### Or with Docker (recommended)
-
-Requires Docker Desktop. From the `product/` directory:
-
-​```bash
-docker compose up --build
-​```
-
-Brings up the API, frontend, and Postgres together. Frontend at http://localhost:5173, API at http://localhost:8080.
-
 ## What's next
 
-- Containerise the API and frontend with Docker (multi-stage builds, non-root user)
-- Deploy to AWS (ECS Fargate + RDS) with a GitHub Actions CI/CD pipeline
+- Add a GitHub Actions CI/CD pipeline (build, test, deploy)
 - Add SAT-solver comparison as a baseline for the hardest known puzzles
-- Persist benchmark runs in Postgres so results are queryable over time
 
 ---
 

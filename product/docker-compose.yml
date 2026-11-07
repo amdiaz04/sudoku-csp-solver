@@ -1,21 +1,4 @@
 services:
-  # Postgres database
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: sudoku
-      POSTGRES_USER: sudoku
-      POSTGRES_PASSWORD: sudoku
-    ports:
-      - "5432:5432"
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U sudoku"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   # Spring Boot API
   api:
     build:
@@ -23,13 +6,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sudoku
-      SPRING_DATASOURCE_USERNAME: sudoku
-      SPRING_DATASOURCE_PASSWORD: sudoku
 
   # React frontend served by nginx
   frontend:
@@ -41,8 +17,7 @@ services:
     environment:
       PORT: 8080
       API_URL: http://api:8080
+      API_HOST: api
+      DNS_RESOLVER: 127.0.0.11  # Docker's embedded DNS, so "api" resolves
     depends_on:
       - api
-
-volumes:
-  db-data:

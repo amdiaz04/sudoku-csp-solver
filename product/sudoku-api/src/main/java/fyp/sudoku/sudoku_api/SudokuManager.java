@@ -116,6 +116,9 @@ public class SudokuManager {
 
   // Solve the current puzzle with the algorithm selected
   public void solvePuzzle() throws UnsolvableSudokuException {
+    if (currentPuzzle == null) {
+      throw new IllegalStateException("No puzzle loaded. Generate or upload one first.");
+    }
     long start = System.nanoTime();
     currentGrid = currentPuzzle.solve(currentAlgorithm);
     long end = System.nanoTime();
