@@ -62,11 +62,17 @@ docker compose up --build
 ```
 Frontend at http://localhost:5173, API at http://localhost:8080 (Swagger at `/swagger-ui/index.html`).
 
-**Without Docker** (Java 21, Maven, Node 20+):
+**Without Docker** (Java 21, Maven, Node 20+). Build the core library once, then run the API and frontend in two separate terminals:
 ```bash
 cd product/sudokuproject && mvn clean install
-cd ../sudoku-api && mvn spring-boot:run          # API on :8080
-cd ../sudoku-frontend && npm install && npm run dev   # UI on :5173
+```
+```bash
+# Terminal 1: API on :8080
+cd product/sudoku-api && mvn spring-boot:run
+```
+```bash
+# Terminal 2: frontend on :5173
+cd product/sudoku-frontend && npm install && npm run dev
 ```
 
 **Using the app:** the Solver tab generates or uploads a puzzle (81 characters, digits `1-9`, `0` or `.` for empty) and solves it with a chosen algorithm. The Statistics tab benchmarks algorithms on generated puzzles or an uploaded file (one puzzle per line) and charts backtracks, nodes visited and runtime.
