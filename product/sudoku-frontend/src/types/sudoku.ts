@@ -23,3 +23,8 @@ export type CalcAvgResponse = {
   avgNodesVisited: Record<string, number>;
   avgTime: Record<string, number>;
 };
+
+export type SolveCheckResponse = {
+  grid: Grid;
+  unique: boolean;
+};

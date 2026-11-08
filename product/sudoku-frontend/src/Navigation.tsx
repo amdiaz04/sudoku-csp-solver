@@ -2,6 +2,7 @@
 
 import SolverPage from "./SolverPage";
 import PerformancePage from "./PerformancePage";
+import ScanPage from "./ScanPage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function Navigation() {
@@ -17,12 +18,18 @@ function Navigation() {
         <TabsTrigger value="performance" className="h-11 flex-none px-4 md:h-8">
           Statistics
         </TabsTrigger>
+        <TabsTrigger value="scan" className="h-11 flex-none px-4 md:h-8">
+          Scan
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="solver">
         <SolverPage />
       </TabsContent>
       <TabsContent value="performance">
         <PerformancePage />
+      </TabsContent>
+      <TabsContent value="scan">
+        <ScanPage />
       </TabsContent>
     </Tabs>
   ); 

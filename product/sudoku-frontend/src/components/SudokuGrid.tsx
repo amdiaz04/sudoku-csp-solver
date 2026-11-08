@@ -2,7 +2,19 @@
 
 import type { Grid } from "@/types/sudoku";
 
-export function SudokuGrid({ grid }: { grid: Grid }) {
+type SudokuGridProps = {
+  grid: Grid;
+  editable?: boolean; // cells become inputs
+  onCellChange?: (row: number, col: number, value: number) => void;
+  original?: Grid; // when given, cells that differ from it are shown in blue
+};
+
+export function SudokuGrid({
+  grid,
+  editable = false,
+  onCellChange,
+  original,
+}: SudokuGridProps) {
   const cells = Array(81).fill(0);
 
   return (
@@ -32,7 +44,33 @@ export function SudokuGrid({ grid }: { grid: Grid }) {
 
             return (
               <div key={index} className={borderClasses}>
-                {value === 0 ? "" : value}
+                {editable ? (
+                  <input
+                    inputMode="numeric"
+                    aria-label={`Row ${row + 1}, column ${col + 1}`}
+                    value={value === 0 ? "" : value}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      // keep only the last character typed
+                      const typed = e.target.value.slice(-1);
+                      if (typed === "") {
+                        onCellChange?.(row, col, 0);
+                      } else if (/[1-9]/.test(typed)) {
+                        onCellChange?.(row, col, Number(typed));
+                      }
+                    }}
+                    className={[
+                      "h-full w-full bg-transparent text-center outline-none focus:bg-blue-100",
+                      original && value !== original[row][col]
+                        ? "text-blue-600"
+                        : "",
+                    ].join(" ")}
+                  />
+                ) : value === 0 ? (
+                  ""
+                ) : (
+                  value
+                )}
               </div>
             );
           })}
