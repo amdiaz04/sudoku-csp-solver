@@ -15,8 +15,6 @@ COPY --from=build /app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/templates/default.conf.template
 
-# Defaults target the Cloud Run deployment; docker-compose overrides them.
 ENV PORT=8080
-ENV DNS_RESOLVER="8.8.8.8 8.8.4.4"
-ENV API_HOST=sudoku-api-1079750265164.europe-west2.run.app
+ENV API_URL=http://api:8080
 EXPOSE 8080
