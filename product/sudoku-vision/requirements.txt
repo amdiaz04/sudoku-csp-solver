@@ -1,0 +1,9 @@
+opencv-python-headless
+numpy
+easyocr
+pillow-heif
+fastapi
+uvicorn
+python-multipart
+httpx
+pytest

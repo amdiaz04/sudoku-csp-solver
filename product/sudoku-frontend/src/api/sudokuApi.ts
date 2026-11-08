@@ -8,6 +8,8 @@ import type {
   Difficulty,
   GeneratePuzzleResponse,
   CalcAvgResponse,
+  SolveCheckResponse,
+  Grid,
 } from "@/types/sudoku";
 
 export async function getDifficulties(): Promise<Difficulty[]> {
@@ -87,5 +89,45 @@ export async function uploadPuzzles(file: File): Promise<CalcAvgResponse | null>
     body: text,
   });
   if (!response.ok) return null;
+  return response.json();
+}
+// Pull a readable message out of an error response (plain text or Spring's JSON).
+async function readError(response: Response, fallback: string): Promise<string> {
+  const text = await response.text();
+  try {
+    const json = JSON.parse(text);
+    if (json.message) return json.message;
+  } catch {
+    if (text) return text; // plain-text body from the exception handlers
+  }
+  if (response.status === 502) return "Photo reader is unavailable";
+  if (response.status === 413) return "Photo is too large";
+  return fallback;
+}
+
+// Upload a photo of a puzzle, the backend reads the digits and returns the grid
+export async function scanImage(file: File): Promise<GeneratePuzzleResponse> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await fetch("/api/sudoku/scan", {
+    method: "POST",
+    body: formData,
+  });
+  if (!response.ok) {
+    throw new Error(await readError(response, "Could not read the photo"));
+  }
+  return response.json();
+}
+
+// Solve a grid and find out whether the puzzle has exactly one solution
+export async function solveCheck(grid: Grid): Promise<SolveCheckResponse> {
+  const response = await fetch("/api/sudoku/solve-check", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(grid),
+  });
+  if (!response.ok) {
+    throw new Error(await readError(response, "Could not solve the puzzle"));
+  }
   return response.json();
 }

@@ -8,13 +8,12 @@ import fyp.sudoku.model.SudokuBoard;
 import fyp.sudoku.solver.SudokuAlgorithm;
 import fyp.sudoku.sudoku_api.types.CalcAvgResponse;
 import fyp.sudoku.sudoku_api.types.GeneratePuzzleResponse;
+import fyp.sudoku.sudoku_api.types.SolveCheckResponse;
 import fyp.sudoku.sudoku_api.types.SolvePuzzleResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +39,9 @@ public class SudokuController {
 
   @Autowired
   private SudokuManager sudokuManager;
+
+  @Autowired
+  private VisionClient visionClient;
 
   @GetMapping("/difficulties")
   public List<Difficulty> getDifficulties() {
@@ -117,6 +119,20 @@ public class SudokuController {
       throws IOException, SudokuReadingException, UnsolvableSudokuException {
     BufferedReader reader = new BufferedReader(new StringReader(file));
     return sudokuManager.calcAvgFromFile(reader);
+  }
+
+  @PostMapping("/scan")
+  public GeneratePuzzleResponse scan(@RequestParam("file") MultipartFile file)
+      throws IOException, SudokuReadingException, UnsolvableSudokuException {
+    String puzzle = visionClient.extractPuzzle(file);
+    SudokuBoard board = sudokuManager.loadFromUser(new BufferedReader(new StringReader(puzzle)));
+    return new GeneratePuzzleResponse(board.getGrid(), sudokuManager.getDifficulty());
+  }
+
+  @PostMapping("/solve-check")
+  public SolveCheckResponse solveAndCheck(@RequestBody int[][] grid)
+      throws UnsolvableSudokuException {
+    return sudokuManager.solveAndCheck(grid);
   }
 
   /**
