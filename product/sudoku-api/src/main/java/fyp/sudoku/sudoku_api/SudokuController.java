@@ -16,8 +16,15 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -40,6 +48,9 @@ public class SudokuController {
 
   @Autowired
   private SudokuManager sudokuManager;
+
+  @Value("${vision.url}")
+  private String visionUrl;
 
   @GetMapping("/difficulties")
   public List<Difficulty> getDifficulties() {
@@ -118,6 +129,28 @@ public class SudokuController {
     BufferedReader reader = new BufferedReader(new StringReader(file));
     return sudokuManager.calcAvgFromFile(reader);
   }
+
+  @PostMapping("/scan")
+  public String scan(@RequestParam("file") MultipartFile file) throws IOException {
+    ByteArrayResource image = new ByteArrayResource(file.getBytes()) {
+      @Override
+      public String getFilename() {
+        return file.getOriginalFilename();
+      }
+    };
+
+    // the form field must be called "image"
+    MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+    body.add("image", image);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+    // for now just return the vision service's raw reply
+    return new RestTemplate().postForObject(
+        visionUrl + "/extract", new HttpEntity<>(body, headers), String.class);
+  }
+
 
   /**
    * Returns a 400 response when a puzzle cannot be solved.
