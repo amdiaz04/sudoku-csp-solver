@@ -163,12 +163,42 @@ def read_digit(binary):
     return (text[0], float(conf)) if text and text[0] in "123456789" else (".", 0.0)
 
 
-def extract_grid(image_path, debug_dir=None):
-    """Return the puzzle in the image as an 81-char string ('.' = blank)."""
-    image = cv2.imread(image_path)
-    if image is None:
-        raise ValueError(f"Could not read image: {image_path}")
+def decode_image(data):
+    """Decode image bytes (JPEG, PNG, ... or iPhone HEIC) into an OpenCV BGR image."""
+    image = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+    if image is not None:
+        return image
 
+    # OpenCV can't read HEIC, so fall back to Pillow with the HEIF plugin.
+    try:
+        import io
+
+        from PIL import Image, ImageOps
+        from pillow_heif import register_heif_opener
+
+        register_heif_opener()
+        pil = ImageOps.exif_transpose(Image.open(io.BytesIO(data))).convert("RGB")
+    except Exception as e:
+        raise ValueError("Could not read image (unsupported or corrupt file)") from e
+    return cv2.cvtColor(np.array(pil), cv2.COLOR_RGB2BGR)
+
+
+def extract_grid_from_bytes(data, debug_dir=None):
+    """Return the puzzle in an uploaded image as an 81-char string ('.' = blank)."""
+    return _extract(decode_image(data), debug_dir)
+
+
+def extract_grid(image_path, debug_dir=None):
+    """Return the puzzle in an image file as an 81-char string ('.' = blank)."""
+    try:
+        with open(image_path, "rb") as f:
+            data = f.read()
+    except OSError as e:
+        raise ValueError(f"Could not read image: {image_path}") from e
+    return extract_grid_from_bytes(data, debug_dir)
+
+
+def _extract(image, debug_dir=None):
     warped = find_and_warp_grid(image)
     cells = split_cells(warped)
 
