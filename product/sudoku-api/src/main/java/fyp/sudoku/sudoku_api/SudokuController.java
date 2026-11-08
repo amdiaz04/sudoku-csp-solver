@@ -49,8 +49,8 @@ public class SudokuController {
   @Autowired
   private SudokuManager sudokuManager;
 
-  @Value("${vision.url}")
-  private String visionUrl;
+  @Autowired
+  private VisionClient visionClient;
 
   @GetMapping("/difficulties")
   public List<Difficulty> getDifficulties() {
@@ -131,26 +131,12 @@ public class SudokuController {
   }
 
   @PostMapping("/scan")
-  public String scan(@RequestParam("file") MultipartFile file) throws IOException {
-    ByteArrayResource image = new ByteArrayResource(file.getBytes()) {
-      @Override
-      public String getFilename() {
-        return file.getOriginalFilename();
-      }
-    };
-
-    // the form field must be called "image"
-    MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-    body.add("image", image);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-    // for now just return the vision service's raw reply
-    return new RestTemplate().postForObject(
-        visionUrl + "/extract", new HttpEntity<>(body, headers), String.class);
+  public GeneratePuzzleResponse scan(@RequestParam("file") MultipartFile file)
+      throws IOException, SudokuReadingException, UnsolvableSudokuException {
+    String puzzle = visionClient.extractPuzzle(file);
+    SudokuBoard board = sudokuManager.loadFromUser(new BufferedReader(new StringReader(puzzle)));
+    return new GeneratePuzzleResponse(board.getGrid(), sudokuManager.getDifficulty());
   }
-
 
   /**
    * Returns a 400 response when a puzzle cannot be solved.
