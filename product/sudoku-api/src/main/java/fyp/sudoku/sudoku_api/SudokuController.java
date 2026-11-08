@@ -8,23 +8,15 @@ import fyp.sudoku.model.SudokuBoard;
 import fyp.sudoku.solver.SudokuAlgorithm;
 import fyp.sudoku.sudoku_api.types.CalcAvgResponse;
 import fyp.sudoku.sudoku_api.types.GeneratePuzzleResponse;
+import fyp.sudoku.sudoku_api.types.SolveCheckResponse;
 import fyp.sudoku.sudoku_api.types.SolvePuzzleResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -136,6 +127,12 @@ public class SudokuController {
     String puzzle = visionClient.extractPuzzle(file);
     SudokuBoard board = sudokuManager.loadFromUser(new BufferedReader(new StringReader(puzzle)));
     return new GeneratePuzzleResponse(board.getGrid(), sudokuManager.getDifficulty());
+  }
+
+  @PostMapping("/solve-check")
+  public SolveCheckResponse solveAndCheck(@RequestBody int[][] grid)
+      throws UnsolvableSudokuException {
+    return sudokuManager.solveAndCheck(grid);
   }
 
   /**

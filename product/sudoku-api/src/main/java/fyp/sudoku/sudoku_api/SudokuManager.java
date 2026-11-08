@@ -13,6 +13,7 @@ import fyp.sudoku.solver.Ac3MrvAlgorithm;
 import fyp.sudoku.solver.BacktrackingRecursiveAlgorithm;
 import fyp.sudoku.solver.SudokuAlgorithm;
 import fyp.sudoku.sudoku_api.types.CalcAvgResponse;
+import fyp.sudoku.sudoku_api.types.SolveCheckResponse;
 import fyp.sudoku.util.SudokuGenerator;
 import fyp.sudoku.util.SudokuReader;
 import java.io.BufferedReader;
@@ -38,6 +39,7 @@ public class SudokuManager {
   private int lastBacktracks;
   private int lastNodesVisited;
   private double lastSolveTime;
+  private static final String CHECK_ALGORITHM = "MAC + MRV";
 
   public SudokuManager() {
     this.generator = new SudokuGenerator();
@@ -200,6 +202,13 @@ public class SudokuManager {
     }
     return runCalculation(boards);
   }
+
+  public SolveCheckResponse solveAndCheck(int[][] grid) throws UnsolvableSudokuException {
+    SudokuPuzzle puzzle = new SudokuPuzzle(new SudokuBoard(grid));
+    SudokuBoard solved = puzzle.solve(algorithms.get(CHECK_ALGORITHM));
+    return new SolveCheckResponse(solved.getGrid(), generator.hasUniqueness(grid));
+  }
+
 }
 
 
