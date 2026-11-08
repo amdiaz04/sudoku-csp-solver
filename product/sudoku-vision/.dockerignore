@@ -1,0 +1,8 @@
+.venv
+__pycache__
+.pytest_cache
+debug
+samples
+test_*.py
+.gitignore
+.DS_Store
